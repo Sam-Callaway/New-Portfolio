@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React  from 'react'
 import useEmblaCarousel, { EmblaOptionsType } from 'embla-carousel-react'
 import {
   PrevButton,
@@ -20,10 +20,11 @@ const images = [image1, image2, image3, image4]
 type PropType = {
   slides: number[]
   options?: EmblaOptionsType
+  setCurrentSlide: Function
 }
 
 const Carousel: React.FC<PropType> = (props) => {
-  const { slides, options } = props
+  const { slides, options, setCurrentSlide } = props
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
 
   const {
@@ -32,6 +33,11 @@ const Carousel: React.FC<PropType> = (props) => {
     onPrevButtonClick,
     onNextButtonClick
   } = usePrevNextButtons(emblaApi)
+
+  emblaApi?.on('select', () => {
+    const selectedSnap = emblaApi?.selectedScrollSnap();
+    setCurrentSlide(selectedSnap)
+  });
 
   return (
     <div className="embla">
@@ -54,7 +60,7 @@ const Carousel: React.FC<PropType> = (props) => {
         </div>
       </div>
 
-      <div className="embla__buttons">
+      <div className="embla__buttons ml-auto mr-auto w-1/2">
         <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
         <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
       </div>
